@@ -1,5 +1,11 @@
 <div id="header">
-    <div class="content">
-        
-    </div>    
+
+<div class="content">
+    @if (currency_list | async; as c) {
+    <ul>
+        <p>{{c.usd}} {{costs[0]}} {{c.eur}} {{costs[1]}}</p>
+    </ul>
+    }        
+</div>  
+
 </div>
