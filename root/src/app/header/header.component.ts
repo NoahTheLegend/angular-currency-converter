@@ -1,4 +1,4 @@
-import { Component, Input, input } from '@angular/core';
+import { Component, OnInit, Input, input } from '@angular/core';
 import { ApiRequestsService } from "../services/api-requests.service";
 import { AsyncPipe } from '@angular/common';
 import { Observable } from 'rxjs';
@@ -11,15 +11,50 @@ import { Observable } from 'rxjs';
   styleUrl: './header.component.scss'
 })
 
-export class HeaderComponent {
-  currency_list!: Observable<any>;
-  costs!: Array<number>;
-  active_currencies!: Array<string>;
+export class HeaderComponent implements OnInit {
+  currency_list!: Observable<any>; // copy of currency names from API component
+  costs!: Array<Array<number>>; // costs to show
+  currency_order!: Array<string>;
   constructor(private api: ApiRequestsService) {}
 
-  ngOnInit(): void {
+  // API service uses httpclient.get, hence we have to wait for actual value
+  // so the method getCurrencyValues() returns promise relevant to observable response
+  async ngOnInit(): Promise<void> {
     this.currency_list = this.api.fetchCurrencyList();
-    this.costs = this.api.getCurrencyValues();
-    this.active_currencies = this.api.getActiveCurrencies();
+    let featured = this.api.getFeaturedList();
+
+    let main = this.api.getActiveCurrencies()[0];
+    let idx = featured.indexOf(main);
+    if (idx != -1) {
+      featured.splice(idx, 1);
+    }
+
+    this.currency_order = featured;
+    this.costs = [];
+  
+    for (let i = 0; i < featured.length; i++) {
+      let another = featured[i];
+
+      try {
+        const mainCurrencyValues = await this.api.fetchCurrencyListAsPromis(main);
+        const anotherCurrencyValues = await this.api.fetchCurrencyListAsPromis(another);
+  
+        const cost = this.api.getCurrency(mainCurrencyValues, anotherCurrencyValues, main, another);
+        this.costs.push(cost);
+      } catch (error) {
+        console.error('Error fetching currency values:', error);
+        this.costs.push([]);
+      }
+    }
+
+    this.costs_to_show = this.costs;
   }
+
+  parseCost(cost: number): number {
+    let new_cost = cost;
+    // make the cost better-looking
+    return new_cost;
+  }
+
+  costs_to_show = this.costs;
 }

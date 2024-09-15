@@ -2,8 +2,10 @@
 
 <div class="content">
     @if (currency_list | async; as c) {
-    <ul>
-        <p>{{c.usd}} {{costs[0]}} {{c.eur}} {{costs[1]}}</p>
+    <ul class="content__currency-list">
+        @for (cost of costs_to_show; track $index) {
+            <li>{{currency_order[$index].toUpperCase()}}: {{parseCost(cost[1])}}</li>
+        }
     </ul>
     }        
 </div>  
