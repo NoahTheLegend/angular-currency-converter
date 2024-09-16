@@ -27,10 +27,12 @@ export class HeaderComponent implements OnInit {
     let main = this.api.getActiveCurrencies()[0];
     this.main = main;
 
+    /* ISSUE: this splices array instance in api, meaning all other components utilizing service will have it changed!
     let idx = featured.indexOf(main);
     if (idx != -1) {
       featured.splice(idx, 1);
     }
+    */
 
     this.currency_order = featured;
     this.costs = [];

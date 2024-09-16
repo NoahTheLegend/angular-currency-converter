@@ -1,2 +1,54 @@
 <app-header></app-header>
+
+<div class="content">
+  <form [formGroup]="form">
+    <div class="currency_input main_input">
+      <h2><label for="mainInput">{{getActiveCurrency(0).toUpperCase()}}</label></h2>
+      <input
+        id="mainInput"
+        type="text"
+        formControlName="mainInput"
+        (input)="onInputChange($event)"
+        placeholder="0.00"
+        value={{values[0]}}
+        autocomplete="off"
+      />
+      <select
+        (change)="onCurrencyChange(0, $event)"
+        formControlName="mainSelect"
+        id="mainSelect">
+        
+        @for (currency of getFeaturedList(); track $index) {
+          <option value={{currency}}>
+            {{ currency.toUpperCase() }}
+          </option>
+        }
+      </select>
+    </div>
+  
+    <div class="currency_input secondary_input">
+      <h2><label for="secondaryInput">{{getActiveCurrency(1).toUpperCase()}}</label></h2>
+      <input
+        id="secondaryInput"
+        type="text"
+        formControlName="secondaryInput"
+        (input)="onInputChange($event)"
+        placeholder="0.00"
+        value={{values[1]}}
+        autocomplete="off"
+      />
+      <select
+        (change)="onCurrencyChange(1, $event)"
+        formControlName="secondarySelect"
+        id="secondarySelect">
+        
+        @for (currency of getFeaturedList(); track $index) {
+          <option value={{currency}}>
+            {{ currency.toUpperCase() }}
+          </option>
+        }
+      </select>
+    </div>
+  </form>
+</div>
 <router-outlet />
