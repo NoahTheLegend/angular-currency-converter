@@ -1,10 +1,10 @@
 <div id="header">
 
-<div class="content">
+<div class="header-content">
     @if (currency_list | async; as c) {
     <ul class="content__currency-list">
         @for (cost of costs_to_show; track $index) {
-            <li>{{currency_order[$index].toUpperCase()}}: {{parseCost(cost[1])}}</li>
+            <li><span>{{currency_order[$index].toUpperCase()}}</span><span>{{parseCost(cost[1])}} {{main.toUpperCase()}}</span></li>
         }
     </ul>
     }        

@@ -15,6 +15,7 @@ export class HeaderComponent implements OnInit {
   currency_list!: Observable<any>; // copy of currency names from API component
   costs!: Array<Array<number>>; // costs to show
   currency_order!: Array<string>;
+  main!: string;
   constructor(private api: ApiRequestsService) {}
 
   // API service uses httpclient.get, hence we have to wait for actual value
@@ -24,6 +25,8 @@ export class HeaderComponent implements OnInit {
     let featured = this.api.getFeaturedList();
 
     let main = this.api.getActiveCurrencies()[0];
+    this.main = main;
+
     let idx = featured.indexOf(main);
     if (idx != -1) {
       featured.splice(idx, 1);
@@ -36,10 +39,10 @@ export class HeaderComponent implements OnInit {
       let another = featured[i];
 
       try {
-        const mainCurrencyValues = await this.api.fetchCurrencyListAsPromis(main);
-        const anotherCurrencyValues = await this.api.fetchCurrencyListAsPromis(another);
+        const main_list = await this.api.fetchCurrencyListAsPromise(main);
+        const another_list = await this.api.fetchCurrencyListAsPromise(another);
   
-        const cost = this.api.getCurrency(mainCurrencyValues, anotherCurrencyValues, main, another);
+        const cost = this.api.getCurrency(main_list, another_list, main, another);
         this.costs.push(cost);
       } catch (error) {
         console.error('Error fetching currency values:', error);
@@ -51,7 +54,7 @@ export class HeaderComponent implements OnInit {
   }
 
   parseCost(cost: number): number {
-    let new_cost = cost;
+    let new_cost = Math.round(cost * 1000) / 1000;
     // make the cost better-looking
     return new_cost;
   }
