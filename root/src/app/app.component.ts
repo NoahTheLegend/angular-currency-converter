@@ -69,7 +69,7 @@ export class AppComponent {
     let active_currencies = this.api.getActiveCurrencies();
     let costs = await this.api.getCurrencyAsPromise(active_currencies[0], active_currencies[1]);
 
-    let final_cost = Math.round((is_main ? (costs[0]*value) : (costs[1]/value)) * 100) / 100;
+    let final_cost = Math.round((is_main ? (costs[0]*value) : (costs[1]*value)) * 100) / 100;
     if (isNaN(final_cost) || !isFinite(final_cost)) return "";
 
     return final_cost.toString();
